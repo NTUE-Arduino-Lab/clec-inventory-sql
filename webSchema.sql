@@ -16,21 +16,16 @@ END
 /*get objects*/
 CREATE PROCEDURE `get_Objects`()
 BEGIN
-SELECT 
-	CONCAT("[",
-		GROUP_CONCAT(
-			CONCAT('{"id":"',ObjectId,'"'),
-			CONCAT(',"year":',Year),
-			CONCAT(',"appellation":"',Appellation,'"'),
-			CONCAT(',"buydate":"',BuyDate,'"'),
-			CONCAT(',"source":"',Source,'"'),
-			CONCAT(',"unit":"',Unit,'"'),
-			CONCAT(',"keeper":"',Keeper,'"'),
-			CONCAT(',"status":"',Status,'"'),
-			CONCAT(',"Note":"',Note,'"}')
-		)
-	,"]")
+SELECT JSON_ARRAYAGG(JSON_OBJECT('id',ObjectId,'year',Year,'appellation',Appellation,'buydate',BuyDate,'source',Source,'unit',Unit,'keeper',Keeper,'status',Status,'note',Note))
 FROM inventory.inventory;
+END
+
+/*get objects*/
+CREATE PROCEDURE `get_instock_Objects`()
+BEGIN
+SELECT JSON_ARRAYAGG(JSON_OBJECT('id',ObjectId,'year',Year,'appellation',Appellation,'buydate',BuyDate,'source',Source,'unit',Unit,'keeper',Keeper,'status',Status,'note',Note))
+FROM inventory.inventory
+where Status = 'in stock';
 END
 
 /*get object*/
