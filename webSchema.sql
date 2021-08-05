@@ -64,6 +64,38 @@ BEGIN
 	CALL web.`get_Object`(JSON_OBJECT('id',InObjectId));
 END
 
+/*edit object*/
+CREATE PROCEDURE `patch_Object`(IN inJson JSON)
+BEGIN
+	declare InObjectId varchar(18);
+	declare InYear int;
+	declare InAppellation varchar(50);
+	declare InBuyDate date;
+	declare InSource varchar(50);
+	declare InUnit varchar(50);
+	declare InKeeper varchar(50);
+	declare InNote varchar(50);
+	set InObjectId = inJson ->> '$.id';
+	set InYear = inJson ->> '$.year';
+	set InAppellation = inJson ->> '$.appellation';
+	set InBuyDate = cast(inJson ->> '$.buydate' as date);
+	set InSource = inJson ->> '$.source';
+	set InUnit = inJson ->> '$.unit';
+	set InKeeper = inJson ->> '$.keeper';
+	set InNote = inJson ->> '$.note';
+	update inventory.inventory i
+	set
+	i.Year = COALESCE(InYear,i.Year),
+	i.Appellation = COALESCE(InAppellation,i.Appellation),
+	i.BuyDate = COALESCE(InBuyDate,i.BuyDate),
+	i.Source = COALESCE(InSource,i.Source),
+	i.Unit = COALESCE(InUnit,i.Unit),
+	i.Keeper = COALESCE(InKeeper,i.Keeper),
+	i.note = COALESCE(InNote,i.note)
+	where i.ObjectId = InObjectId;
+	CALL web.`get_Object`(JSON_OBJECT('id',InObjectId));
+END
+
 /*delete object*/
 CREATE PROCEDURE `delete_Object`(IN inJson JSON)
 BEGIN
