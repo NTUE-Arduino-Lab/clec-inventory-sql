@@ -78,7 +78,9 @@ BEGIN
 	set InObjectId = inJson ->> '$.id';
 	set InYear = inJson ->> '$.year';
 	set InAppellation = inJson ->> '$.appellation';
-	set InBuyDate = cast(inJson ->> '$.buydate' as date);
+	if InBuyDate != null
+	then set InBuyDate = cast(inJson ->> '$.buydate' as date);
+    end if;
 	set InSource = inJson ->> '$.source';
 	set InUnit = inJson ->> '$.unit';
 	set InKeeper = inJson ->> '$.keeper';
