@@ -11,6 +11,7 @@ END IF
 	Grant execute permission to created users
 */
 GRANT ALL PRIVILEGES ON web.* TO 'clec'@'%';
+GRANT ALL PRIVILEGES ON inventory.* TO 'clec'@'%';
 GO
 
 create DATABASE inventory;
