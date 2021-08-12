@@ -1,14 +1,16 @@
-IF SCHEMA_ID('web') IS NULL BEGIN	
+IF SCHEMA_ID('web') IS NULL THEN
 	EXECUTE('CREATE SCHEMA web');
-END
-GO
+END IF
 
-IF USER_ID('clec') IS NULL BEGIN	
-	CREATE USER 'clec'@'%' WITH IDENTIFIED = 'jCLP4x';
-END
+
+IF USER_ID('clec') IS NULL THEN
+	CREATE USER 'clec'@'%' IDENTIFIED BY 'jCLP4x';
+END IF
 
 /*
 	Grant execute permission to created users
 */
 GRANT ALL PRIVILEGES ON web.* TO 'clec'@'%';
 GO
+
+create DATABASE inventory;

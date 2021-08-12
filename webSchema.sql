@@ -5,7 +5,7 @@ BEGIN
 	declare InPasswd varchar(255);
     
 	set InAccount = inJson ->> '$.Account';
-    set InPasswd = MD5(inJson ->> '$.Passwd');
+    set InPasswd = SHA2(inJson ->> '$.Passwd',224);
     
 	IF INPasswd = (SELECT Passwd FROM inventory.userInfo WHERE InPasswd = Passwd AND InAccount = Account)
 	THEN
@@ -180,7 +180,7 @@ BEGIN
 	insert into inventory.borrowed(ObjectId,borrowDate,Name,Phone,borrowDeal,returnDate,returnDeal)
 	select ObjectId,borrowDate,Name,Phone,borrowDeal,InReturnDate,InReturnDeal
 	from inventory.borrowing
-	where ObjectId = InObjectId
+	where ObjectId = InObjectId;
 	delete from inventory.borrowing where ObjectId = InObjectId;
 	update inventory.inventory
 	set Status = 'in stock'
