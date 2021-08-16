@@ -141,17 +141,7 @@ END
 /*get borrowing*/
 CREATE PROCEDURE `get_Borrowing`()
 BEGIN
-SELECT 
-	CONCAT("[",
-		GROUP_CONCAT(
-			CONCAT('{"id":"',i.ObjectId,'"'),
-			CONCAT(',"appellation":"',i.Appellation,'"'),
-			CONCAT(',"date":',b.borrowDate,'"'),
-			CONCAT(',"name":"',b.Name,'"'),
-			CONCAT(',"Phone":"',b.phone,'"'),
-			CONCAT(',"borrowDeal":"',b.borrowDeal,'"}')
-		)
-	,"]")
+SELECT JSON_ARRAYAGG(JSON_OBJECT('id',i.ObjectId,'appellation',i.Appellation,'date',b.borrowDate,'name',b.Name,'phone',b.phone,'borrowDeal',b.borrowDeal))
 FROM inventory.inventory i,inventory.borrowing b
 where i.ObjectId = b.ObjectId;
 END
@@ -186,4 +176,27 @@ BEGIN
 	set Status = 'in stock'
 	where ObjectId = InObjectId;
 	call web.`get_Return`(JSON_OBJECT('id',InObjectId,'date',InReturnDate));
+END
+
+/*search*/
+CREATE PROCEDURE `get_Search`(IN inJson JSON)
+BEGIN
+	declare Keyword varchar(50);
+	set Keyword = inJson ->> '$.keyword';
+	SELECT JSON_ARRAYAGG(JSON_OBJECT('id',ObjectId,'year',Year,'appellation',Appellation,'buydate',BuyDate,'source',Source,'unit',Unit,'keeper',Keeper,'status',Status,'note',Note))
+	FROM inventory.inventory
+	WHERE Appellation LIKE '%'+Keyword+'%'
+	OR Keeper LIKE '%'+Keyword+'%'
+	OR Unit LIKE '%'+Keyword+'%'
+	OR Source LIKE '%'+Keyword+'%';
+END
+
+/*get item history*/
+CREATE PROCEDURE `get_History`(IN inJson JSON)
+BEGIN
+	declare InObjectId varchar(18);
+	set InObjectId = inJson ->> '$.id';
+	SELECT JSON_ARRAYAGG(JSON_OBJECT('id',ObjectId,'appellation',Appellation,'borrowDate',borrowDate,'name',Name,'phone',phone,'borrowDeal',borrowDeal,'returnDate',returnDate,'returnDeal',returnDeal))
+	from inventory.borrowed
+	where ObjectId = InObjectId;
 END
