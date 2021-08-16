@@ -185,10 +185,10 @@ BEGIN
 	set Keyword = inJson ->> '$.keyword';
 	SELECT JSON_ARRAYAGG(JSON_OBJECT('id',ObjectId,'year',Year,'appellation',Appellation,'buydate',BuyDate,'source',Source,'unit',Unit,'keeper',Keeper,'status',Status,'note',Note))
 	FROM inventory.inventory
-	WHERE Appellation LIKE '%'+Keyword+'%'
-	OR Keeper LIKE '%'+Keyword+'%'
-	OR Unit LIKE '%'+Keyword+'%'
-	OR Source LIKE '%'+Keyword+'%';
+	WHERE Appellation LIKE concat('%',keyword,'%')
+	OR Keeper LIKE concat('%',keyword,'%')
+	OR Unit LIKE concat('%',keyword,'%')
+	OR Source LIKE concat('%',keyword,'%');
 END
 
 /*get item history*/
