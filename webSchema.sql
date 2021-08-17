@@ -196,7 +196,7 @@ CREATE PROCEDURE `get_History`(IN inJson JSON)
 BEGIN
 	declare InObjectId varchar(18);
 	set InObjectId = inJson ->> '$.id';
-	SELECT JSON_ARRAYAGG(JSON_OBJECT('id',ObjectId,'appellation',Appellation,'borrowDate',borrowDate,'name',Name,'phone',phone,'borrowDeal',borrowDeal,'returnDate',returnDate,'returnDeal',returnDeal))
+	SELECT JSON_ARRAYAGG(JSON_OBJECT('id',ObjectId,'borrowDate',borrowDate,'name',Name,'phone',phone,'borrowDeal',borrowDeal,'returnDate',returnDate,'returnDeal',returnDeal))
 	from inventory.borrowed
 	where ObjectId = InObjectId;
 END
